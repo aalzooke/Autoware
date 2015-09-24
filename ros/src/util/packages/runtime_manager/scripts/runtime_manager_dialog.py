@@ -624,6 +624,11 @@ class MyFrame(rtmgr.MyFrame):
 	def OnTreeHyperlinked(self, event):
 		self.OnHyperlinked_obj(event.GetItem())
 
+	def OnHyperlinked(self, event):
+		obj = event.GetEventObject()
+		print(obj.GetLabel() + ' clicked')
+		#self.OnHyperlinked_obj(obj)
+
 	def OnHyperlinked_obj(self, obj):
 		(pdic, gdic, prm) = self.obj_to_pdic_gdic_prm(obj)
 		if pdic is None or prm is None:
@@ -1627,6 +1632,19 @@ class MyFrame(rtmgr.MyFrame):
 			item = tree.AppendItem(item, name, ct_type=ct_type)
 			if 'cmd' in items:
 				cmd_dic[item] = (items['cmd'], None)
+			if 'links' in items:
+				pnl = wx.Panel(tree, wx.ID_ANY)
+				szr = wx.BoxSizer(wx.HORIZONTAL)
+				szr.Add(wx.StaticText(pnl, wx.ID_ANY, '['), 0, wx.LEFT, 4)
+				for link in items.get('links', []):
+					lkc = wx.HyperlinkCtrl(pnl, wx.ID_ANY, link, "")
+					lkc.SetVisitedColour(lkc.GetNormalColour()) # no change
+					self.Bind(wx.EVT_HYPERLINK, self.OnHyperlinked, lkc)
+					szr.Add(lkc, 0, wx.LEFT, 4)
+				szr.Add(wx.StaticText(pnl, wx.ID_ANY, ']'), 0, wx.LEFT, 4)
+				pnl.SetSizer(szr)
+				szr.Fit(pnl)
+				item.SetWindow(pnl)
 
 			if 'param' in items:
 				prm = self.get_param(items.get('param'))

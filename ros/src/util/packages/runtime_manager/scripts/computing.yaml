@@ -9,6 +9,7 @@ subs :
         cmd  : rosrun gnss_localizer fix2tfpose
         gui  :
           stat_topic : [ gnss ]
+        links: [ foo, bar, hoge ]
       - name : nmea2tfpose
         #cmd  : rosrun gnss_localizer nmea2tfpose
         cmd  : roslaunch gnss_localizer nmea2tfpose.launch
@@ -21,6 +22,7 @@ subs :
         param: ndt_mapping
         gui  :
           dialog : MyDialogNdtMapping
+        links: [ link-test-1, link-test-2, link-test-3 ]
       - name : ndt_matching
         cmd  : roslaunch ndt_localizer ndt_matching.launch
         param: ndt
